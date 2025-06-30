@@ -43,4 +43,29 @@ Commit: `Sprint_1: Recolección de logs y eventos`\
 Pull Request: #19\
 Hash: 
 
+## Sprint-2
+- 2025-06-28: Añadí la documentación de metric_visualizer.py\
+Commit: `feat(py): Añadir metric_visualizar.py con documentación`\
+Pull Request: #22\
+Hash: a406f5dfa3d4292bc1306c92c22bfd5e8f6e25cd
 
+- 2025-06-28: Actualicé el gitignore para que no detecte debug.log\
+Commit: `docs(gitignote): Actualizar gitignore para excluir debug.log`\
+Pull Request: #22\
+Hash: 7a68c25e9cf9b2f38b225616149b79d55665e0ae
+
+- 2025-06-28: Actualicé scripts para que creen las carpetas en el directorio raíz\
+Commit: `fix(py): Actualizar ubicación de directorio raíz`\
+Pull Request: #22\
+Hash: 755f3d16dcc9487e1f52416cafcd8434167a72d3
+
+- 2025-06-28: Añadí las pruebas unitarias para el recolector y lectura de métricas\
+Commit: `feat(py): Añadir pruebas para metric_collector.py y metric_visualizer.py`\
+Pull Request: #22\
+Hash: 956e81f0b37431c1a00c21bde88a012f941198b7
+
+## Sprint-3
+- 2025-06-30: Implementé la visualización de alertas según umbrales y el uso del CPU\
+Commit:`feat(py): Implementando funcionamiento de gestión de alertar en nuestro visualizar de métricas`\
+Pull Request: #26\
+Hash: b41520231a10316c5c2f82ba885772c7dc8c39bb

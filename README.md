@@ -113,3 +113,100 @@ Para volver al estado actual de `Proyecto7-PC4` solo ejecutamos el siguiente com
 git checkout main
 ```
 Y con esto se acabaría toda mi constribución para el **Sprint-1**
+
+
+## Sprint 2_3
+La razon por la que creo las carpetas y este nombre como Sprint 2_3 es porque es un mismo archivo, en el cuál solo he modificado actualizar lo que pedían, la cuál visualizar las métricas que se obtiene con un script anterior, los pasos a seguir son los siguientes
+
+```bash
+# Clonar en caso no se tenga, sino entrar y solo realizar git pull
+git clone https://github.com/grupo10-CC3S2/Proyecto7-PC4.git
+
+cd Proyecto7-PC4
+```
+Luego seguimos el `README.md` para construir las imagenes y desplegar los pods
+```bash
+docker build -t timeserver:v1 app
+docker build -t timeserver:v2 app
+
+kubectl apply -f k8s/
+```
+
+Luego de tener todo listo, instalamos `metric server` para poder obtener las métricas de los pods, para esto seguimos las instrucciones del `README-visualizer.py`
+
+## Instalar metrics-server
+kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml
+
+
+En caso ejecutemos la línea "kubectl top pods -n default" que indique algo como `API no disponible` lo que haremos será
+
+### 1.- kubectl get pods -n kube-system
+
+Y verificar que existe un pods llamado metric-server-<numero>-<codigo>
+
+Si verificamos eso, guardamos el nombre del pods, y editaremos su archivo
+
+```bash
+kubectl edit deployment metrics-server -n kube-system
+```
+Esto nos abrirá un editor, y cuando haga esto, buscamos lo siguiente:
+```bash
+containers:
+    - args:
+        - --cert-dir=/tmp
+        - --secure-port=10250
+        - --kubelet-preferred-address-types=InternalIP,ExternalIP,Hostname
+        - --kubelet-use-node-status-port
+        - --metric-resolution=15s
+```
+Cuando encontremos eso, lo que haremos será agregar la siguiente línea
+```bash
+        - --kubelet-insecure-tls
+```
+**Ojo** Tener cuidado con los espacios
+
+Luego guardamos el editor, cerramos el archivo
+### Mal
+En caso hayamos editado mal nos aparecerá algo así cuando guardemos el archivo
+```bash
+error: deployments.apps "metrics-server" is invalid
+```
+Y nos abrirá otro editor
+
+### Bien
+En caso haberlo hecho bien, nos aparecerá este mensaje
+```bash
+deployment.apps/metrics-server edited
+```
+
+Ahora con esto, ya podemos ejecutar el comando
+
+```bash
+kubectl top pods -d default
+```
+
+Luego de verificar que podemos obtener las métricas, creamos el entorno virtual con las dependencias necesarias para ejecutar los scripts.
+```bash
+python -m venv venv
+
+# Entrar al entrono
+.\venv\Scripts\activate
+
+# Instalar dependencias
+pip install -r requirements.txt
+```
+
+
+Finalmente ejecutamos el archivo `metric_collector.py` ya que el `metric_visualizer.py` depende de el script anterior porque lee los datos que ese genera
+
+```bash
+python scripts/metric_collector/metric_collector.py
+```
+
+Luego de obtenida las métricas, procedemos a probar el archivo `metric_visualizer.py` que cree
+
+```bash
+python scripts/metric_collector/metric_visualizer.py
+```
+
+Ahora con esto ya vemos lo realizado para este sprint, el cuál nos muestra en la terminal las métricas para todos los pods existentes y también de los nodos, además de que realiza alertas en caso el nodo o pod supere el umbral esperado y tambien avise en caso el pod no está el estado `Ready`
